@@ -1,6 +1,6 @@
 {
   "name": "reducto",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Provides configuration-based routing and service definitions for express.js.",
   "main": "index.js",
   "scripts": {
