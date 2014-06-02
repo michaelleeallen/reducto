@@ -11,19 +11,19 @@ var service = require('./lib/service');
  * @returns {array} a list of middleware functions
  */
 var loadStack = function(config){
-	var args = _.rest(_.toArray(arguments));
-	var stack = [];
-	args.forEach(function(fn){
-		var out = fn(config);
-		if ( out ) {
-			if ( _.isArray(out) ){
-				stack = stack.concat(out);
-			} else {
-				stack.push(out);
-			}
-		}
-	});
-	return stack;
+  var args = _.rest(_.toArray(arguments));
+  var stack = [];
+  args.forEach(function(fn){
+    var out = fn(config);
+    if ( out ) {
+      if ( _.isArray(out) ){
+        stack = stack.concat(out);
+      } else {
+        stack.push(out);
+      }
+    }
+  });
+  return stack;
 };
 
 /**
@@ -32,14 +32,14 @@ var loadStack = function(config){
  * @module router
  */
 module.exports = function(app, routes, services){
-	_.each(routes, function(methods, route){
-		_.each(methods, function(config, method){
-			app[method](route, loadStack(
-				config, 
-				middleware,
-				fixture, 
-				service.bind(null, services)
-			));
-		});
-	});
+  _.each(routes, function(methods, route){
+    _.each(methods, function(config, method){
+      app[method](route, loadStack(
+        config, 
+        middleware,
+        fixture, 
+        service.bind(null, services)
+      ));
+    });
+  });
 };
