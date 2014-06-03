@@ -1,3 +1,3 @@
 module.exports = function(data){
-	return data.query.results.channel;
+  return data.query.results.channel;
 };
