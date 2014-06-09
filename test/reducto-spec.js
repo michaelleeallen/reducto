@@ -2,6 +2,7 @@ var expect = require('chai').expect;
 var express = require('express');
 var request = require('supertest');
 var reducto = require('../index');
+var bodyParser = require('body-parser');
 
 var app = express();
 
@@ -44,6 +45,7 @@ var services = {
   }
 };
 
+app.use(bodyParser());
 reducto(app, routes, services);
 app.use(function(req, res, next){
   res.json(res.locals);
