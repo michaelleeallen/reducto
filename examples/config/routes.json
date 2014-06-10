@@ -1,0 +1,10 @@
+{
+  "/weather/:zipcode": {
+    "get": {
+      "services": ["get:weather"],
+      "fixture": {
+        "message": "Current weather"
+      }
+    }
+  }
+}

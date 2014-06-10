@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{message}</title>
+  </head>
+  <body>
+    <article class="forecast">
+      <header>
+        <a href="{link}">{title}</a>
+      </header>
+      <section class="body">
+        {item.description|s}
+      </section>
+    </article>
+</html>
