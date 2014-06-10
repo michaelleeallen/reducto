@@ -108,5 +108,5 @@ These are great for when you need the data in a different format than what the s
 ## Running the example application
 
 Navigate to the root directory and run `npm start`. This will start the example app at
-`http://localhost:3000`. You can view the example page by pointing your browser to `localhost:3000/weahter/:zipcode`
+`http://localhost:3000`. You can view the example page by pointing your browser to `http://localhost:3000/weather/:zipcode`
 where `:zipcode` is any valid zip. The resulting page should show you the weather for that zipcode.
