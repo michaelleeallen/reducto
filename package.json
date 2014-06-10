@@ -1,6 +1,6 @@
 {
   "name": "reducto",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/michaelleeallen/reducto"
@@ -8,13 +8,22 @@
   "description": "Provides configuration-based routing and service definitions for express.js.",
   "main": "index.js",
   "scripts": {
+    "start": "node examples/app",
     "test": "grunt test"
   },
   "author": {
     "name": "Michael Allen",
     "email": "michael.lee.allen@gmail.com"
   },
-  "keywords": ["express", "request", "reducto", "configuration", "routes", "services", "api"],
+  "keywords": [
+    "express",
+    "request",
+    "reducto",
+    "configuration",
+    "routes",
+    "services",
+    "api"
+  ],
   "license": "ISC",
   "dependencies": {
     "q": "^1.0.1",
@@ -30,6 +39,7 @@
     "grunt-mocha-test": "^0.11.0",
     "load-grunt-tasks": "^0.4.0",
     "mocha": "^1.20.0",
-    "supertest": "^0.13.0"
+    "supertest": "^0.13.0",
+    "dustjs-linkedin": "^2.3.5"
   }
 }

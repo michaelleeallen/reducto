@@ -1,9 +1,11 @@
 # Reducto [![Build Status](https://travis-ci.org/michaelleeallen/reducto.png)](https://travis-ci.org/michaelleeallen/reducto)
 
-A lightweight configuration framework for express.js that aims to simplify creating routes and APIs for single page apps.
-Reducto aims to make your express app or API composable by providing configurations for middleware, service calls, static
-data and data transformations. The idea is to compose your app of smaller, easily understood pieces of code that are testable
-and reusable across your app.
+A lightweight configuration framework for express.js that aims to simplify creating routes and APIs for apps with
+a distributed back-end.
+
+The main concept behind reducto is to configure your app of smaller, easily understood pieces of code that are testable
+, composable and reusable across your app. This should reduce the amount of boilerplate code that you have
+to write and test for thus making your app more robust and easier to maintain.
 
 ## Installation
 
@@ -48,7 +50,7 @@ res.json(res.locals);
 Routes can be configured to use middleware, fixtures and service calls. Each piece is optional:
 ```json
 {
-  "/my/route": {
+  "/my/route/:id": {
     "get": {
       "middleware": ["lib/middleware.js#myFunc"],
       "services": ["myRESTfulEndpoint"],
@@ -76,7 +78,7 @@ consume and return JSON are supported.
 {
   "myRESTfulEndpoint": {
     "get": {
-      "uri": "http://myws.com/api/someresource",
+      "uri": "http://myws.com/api/someresource/{id}",
       "headers": {
         "api-key": "adlfplkjf09123lkj32lkj3"
       },
@@ -88,8 +90,13 @@ consume and return JSON are supported.
   }
 }
 ```
-Service calls use [mikeal's](https://github.com/mikeal) [request](https://github.com/mikeal/request) module to handle HTTP, so any valid request configuration for
-request applies here. The `transform` key refers to any module/method that accepts JSON as input and produces JSON as output:
+Note that the route config is using
+the express routing mechanism for parameters: `/my/route/:id`. This data can then be used in our service calls by
+placing a corresponding URI token in the service definition: `http://myws.com/api/someresource/{id}` where `{id}`
+will map to `:id`.
+
+Service calls use [mikeal's](https://github.com/mikeal) [request](https://github.com/mikeal/request) module to handle HTTP, so any valid configuration for
+**request** applies here. The `transform` key refers to any module/method that accepts JSON as input and produces JSON as output:
 ```javascript
 module.exports = function(data){
   // do some modification on data ...
@@ -97,3 +104,9 @@ module.exports = function(data){
 };
 ```
 These are great for when you need the data in a different format than what the service(which you may have no control over) provides.
+
+## Running the example application
+
+Navigate to the root directory and run `npm start`. This will start the example app at
+`http://localhost:3000`. You can view the example page by pointing your browser to `localhost:3000/weahter/:zipcode`
+where `:zipcode` is any valid zip. The resulting page should show you the weather for that zipcode.
