@@ -1,12 +1,20 @@
 {
   "name": "reducto",
   "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/michaelleeallen/reducto"
+  },
   "description": "Provides configuration-based routing and service definitions for express.js.",
   "main": "index.js",
   "scripts": {
     "test": "grunt test"
   },
-  "author": "Michael Allen",
+  "author": {
+    "name": "Michael Allen",
+    "email": "michael.lee.allen@gmail.com"
+  },
+  "keywords": ["express", "request", "reducto", "configuration", "routes", "services", "api"],
   "license": "ISC",
   "dependencies": {
     "q": "^1.0.1",
