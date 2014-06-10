@@ -80,7 +80,7 @@ consume and return JSON are supported.
       "headers": {
         "api-key": "adlfplkjf09123lkj32lkj3"
       },
-      "dataTransform": "path/to/my/transform.js#someMethod"
+      "transform": "path/to/my/transform.js#someMethod"
     },
     "post": {
       "uri": "http://myws.com/api/someresource"
@@ -89,10 +89,11 @@ consume and return JSON are supported.
 }
 ```
 Service calls use [mikeal's](https://github.com/mikeal) [request](https://github.com/mikeal/request) module to handle HTTP, so any valid request configuration for
-request applies here. The `dataTransform` key refers to any module/method that accepts JSON as input and produces JSON as output:
+request applies here. The `transform` key refers to any module/method that accepts JSON as input and produces JSON as output:
 ```javascript
 module.exports = function(data){
   // do some modification on data ...
   return data;
 };
 ```
+These are great for when you need the data in a different format than what the service(which you may have no control over) provides.
