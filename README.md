@@ -3,7 +3,7 @@
 A lightweight configuration framework for express.js that aims to simplify creating routes and APIs for apps with
 a distributed back-end.
 
-The main goal of reducto is to break apart the routing mechanism smaller, more cohesive components. By reducing your app to just middleware, data transforms, and reusable service calls you end up with a smaller set of code to reason about and thus make your app easier to write and maintain.
+The main goal of reducto is to break apart the routing mechanism into smaller, more cohesive components. By reducing your app to just middleware, data transforms, and reusable service calls you end up with a smaller set of code to reason about and thus make your app easier to write and maintain.
 
 
 ## Installation
