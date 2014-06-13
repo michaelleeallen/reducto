@@ -24,6 +24,11 @@ var routes = {
       services: ['get:weather']
     }
   },
+  '/route/with/transform': {
+    get: {
+      transform: ['test/transforms.js#foo', 'test/transforms.js#bar']
+    }
+  },
   '/test/all': {
     get: {
       middleware: ['test/middleware.js#headerTest'],
@@ -39,7 +44,7 @@ var services = {
   weather: {
     get: {
       uri: 'http://query.yahooapis.com/v1/public/yql?q=select * from weather.forecast where location=29681&format=json',
-      transform: 'test/weather-transform.js',
+      transform: ['test/weather-transform.js'],
       method: 'get'     
     }
   }
@@ -61,13 +66,16 @@ describe('reducto module', function(){
   it('can configure middleware stacks per route', function(done){
     request(app).get('/test/middleware').expect(200).expect('x-foo', 'bar').end(done);
   });
+  it('routes can have a transform function', function(done){
+    request(app).get('/route/with/transform').expect(200, {foo: 'bar', bar: 'foo'}).end(done);
+  });
   it('can have all configurations on one route', function(done){
     request(app).get('/test/all')
       .expect(200)
       .expect('x-foo', 'bar')
       .end(function(error, res){
         expect(res.body.foo).to.equal('bar');
-        expect(res.body.title).to.equal('Yahoo! Weather - Simpsonville, SC');
+        expect(res.body.weather.title).to.equal('Yahoo! Weather - Simpsonville, SC');
         done(error);
       });
   });
