@@ -1,3 +1,5 @@
-module.exports = function(data){
-  return data.query.results.channel;
+module.exports = function(data){  
+  data.weather = data.query.results.channel;
+  data.query = undefined;
+  return data;
 };

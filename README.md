@@ -58,7 +58,8 @@ Routes can be configured to use middleware, fixtures and service calls. Each pie
       }
     },
     "post": {
-      "services": ["post:myRESTfulEndpoint"]
+      "services": ["post:myRESTfulEndpoint"],
+      "transform": ["lib/my-post-transform.js"]
     }
   }
 }
@@ -68,6 +69,7 @@ the HTTP methods per route. Each method can have its own configuration. The conf
 - `middleware` is a list of middleware functions to call, called in sequential order.
 - `services` is a list of service configuration keys, called in sequential order.
 - `fixture` is any valid JSON data to include with the routes collected data
+- `transform` is a list of data transform functions to call after the route is finished 
 
 ## Service configuration
 
@@ -81,7 +83,7 @@ consume and return JSON are supported.
       "headers": {
         "api-key": "adlfplkjf09123lkj32lkj3"
       },
-      "transform": "path/to/my/transform.js#someMethod"
+      "transform": ["path/to/my/transform.js#someMethod"]
     },
     "post": {
       "uri": "http://myws.com/api/someresource"

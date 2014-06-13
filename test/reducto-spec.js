@@ -44,7 +44,7 @@ var services = {
   weather: {
     get: {
       uri: 'http://query.yahooapis.com/v1/public/yql?q=select * from weather.forecast where location=29681&format=json',
-      transform: 'test/weather-transform.js',
+      transform: ['test/weather-transform.js'],
       method: 'get'     
     }
   }
@@ -75,7 +75,7 @@ describe('reducto module', function(){
       .expect('x-foo', 'bar')
       .end(function(error, res){
         expect(res.body.foo).to.equal('bar');
-        expect(res.body.title).to.equal('Yahoo! Weather - Simpsonville, SC');
+        expect(res.body.weather.title).to.equal('Yahoo! Weather - Simpsonville, SC');
         done(error);
       });
   });
