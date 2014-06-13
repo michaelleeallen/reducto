@@ -24,6 +24,11 @@ var routes = {
       services: ['get:weather']
     }
   },
+  '/route/with/transform': {
+    get: {
+      transform: ['test/transforms.js#foo', 'test/transforms.js#bar']
+    }
+  },
   '/test/all': {
     get: {
       middleware: ['test/middleware.js#headerTest'],
@@ -60,6 +65,9 @@ describe('reducto module', function(){
   });
   it('can configure middleware stacks per route', function(done){
     request(app).get('/test/middleware').expect(200).expect('x-foo', 'bar').end(done);
+  });
+  it('routes can have a transform function', function(done){
+    request(app).get('/route/with/transform').expect(200, {foo: 'bar', bar: 'foo'}).end(done);
   });
   it('can have all configurations on one route', function(done){
     request(app).get('/test/all')
