@@ -26,6 +26,10 @@ var routes = {
   },
   '/route/with/transform': {
     get: {
+      fixture: {
+        foo: 'not bar',
+        bar: 'not foo'
+      },
       transform: ['test/transforms.js#foo', 'test/transforms.js#bar']
     }
   },
