@@ -6,18 +6,16 @@ var app = express();
 var routes = require('./config/routes.json');
 var services = require('./config/services.json');
 
-// contrived example, dont do this in a real app
-var tpl = fs.readFileSync('./examples/views/index.dust', 'utf-8');
-tpl = dust.compileFn(tpl);
+// setup view engine for rendering templates
+dust.onLoad = function(name, cb){
+  fs.readFile(name, 'utf-8', cb);
+};
+app.engine('dust', dust.render);
+app.set('views', './examples/views');
+app.set('view engine', 'dust');
+
 // sets up our routes
 reducto(app, routes, services);
-// response handling middleware that just renders a template
-app.use(function(req, res, next){
-  tpl(res.locals, function(error, out){
-    res.set('Content-Type', 'text/html');
-    res.write(out);
-    res.end();
-  });
-});
+
 // start the show
-app.listen(3000, console.log.bind(null, 'Reducto example started at localhost:3000...'));
+app.listen(3000, console.log.bind(null, 'Reducto example started. Goto http://localhost:3000/weather/:zipcode'));
