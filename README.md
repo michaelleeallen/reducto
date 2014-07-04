@@ -24,19 +24,19 @@ the response for your routes:
 var express = require('express');
 var reducto = require('reducto');
 var app = express();
-// NOTE: the follwing could be contained in the same file
 var routes = require('your_route_config.json');
 var services = require('your_services_config.json');
 
-// maybe some pre-processing middleware...
 reducto(app, routes, services);
-// maybe some post-processing middleware...
-// your middleware that finally handles the response...
+
+// middleware to handle any non-view responses, like JSON...
 
 app.listen(3000);
 ```
+
 All of the data collected by reducto will be placed in `res.locals`, so your response-handling
 middleware should look there:
+
 ```javascript
 //...
 res.render('mytemplate', res.locals);
@@ -46,11 +46,12 @@ res.json(res.locals);
 
 ## Route configuration
 
-Routes can be configured to use middleware, fixtures and service calls. Each piece is optional:
+Routes can be configured to use middleware, views, fixtures and service calls. Each piece is optional:
 ```json
 {
   "/my/route/:id": {
     "get": {
+			"viewName": "my-view",
       "middleware": ["lib/middleware.js#myFunc"],
       "services": ["get:myRESTfulEndpoint"],
       "fixture": {
@@ -64,12 +65,14 @@ Routes can be configured to use middleware, fixtures and service calls. Each pie
   }
 }
 ```
+
 Each route is defined by its URI pattern. This can be any legal express route pattern. Next you define
 the HTTP methods per route. Each method can have its own configuration. The config options are:
+- `viewName` the path to the view to render
 - `middleware` is a list of middleware functions to call, called in sequential order.
 - `services` is a list of service configuration keys, called in sequential order.
 - `fixture` is any valid JSON data to include with the routes collected data
-- `transform` is a list of data transform functions to call after the route is finished 
+- `transform` is a list of data transform functions to call after the route is finished
 
 ## Service configuration
 
@@ -98,6 +101,7 @@ will map to `:id`.
 
 Service calls use [mikeal's](https://github.com/mikeal) [request](https://github.com/mikeal/request) module to handle HTTP, so any valid configuration for
 **request** applies here. The `transform` key refers to any module/method that accepts JSON as input and produces JSON as output:
+
 ```javascript
 module.exports = function(data){
   // do some modification on data ...

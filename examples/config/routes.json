@@ -1,6 +1,7 @@
 {
   "/weather/:zipcode": {
     "get": {
+      "viewName": "index",
       "services": ["get:weather"],
       "fixture": {
         "message": "Current weather"
