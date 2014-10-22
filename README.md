@@ -51,7 +51,7 @@ Routes can be configured to use middleware, views, fixtures and service calls. E
 {
   "/my/route/:id": {
     "get": {
-			"viewName": "my-view",
+      "viewName": "my-view",
       "middleware": ["lib/middleware.js#myFunc"],
       "services": ["get:myRESTfulEndpoint"],
       "fixture": {
