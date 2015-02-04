@@ -8,48 +8,44 @@ var app = express();
 
 var routes = {
   '/test/middleware': {
-    get: {
-      middleware: ['test/middleware.js#headerTest']
-    }
+    GET: [
+      { type: 'middleware', path: '../test/fixtures/middleware.js#headerTest' }
+    ]
   },
   '/test/fixture': {
-    get: {
-      fixture: {
+    GET:[
+      { type: 'fixture', data: {
         foo: 'bar'
-      }
-    }
+      }}
+    ]
   },
   '/test/services': {
-    get: {
-      services: ['get:weather']
-    }
+    GET: [
+      { type: 'service', name: 'GET:weather' }
+    ]
   },
   '/route/with/transform': {
-    get: {
-      fixture: {
-        foo: 'not bar',
-        bar: 'not foo'
-      },
-      transform: ['test/transforms.js#foo', 'test/transforms.js#bar']
-    }
+    GET: [
+      { type: 'transform', path: '../test/fixtures/transforms.js#foo' },
+      { type: 'transform', path: '../test/fixtures/transforms.js#bar' }
+    ]
   },
   '/test/all': {
-    get: {
-      middleware: ['test/middleware.js#headerTest'],
-      services: ['get:weather'],
-      fixture: {
+    GET: [
+      { type: 'middleware', path: '../test/fixtures/middleware.js#headerTest' },
+      { type: 'service', name: 'GET:weather' },
+      { type: 'transform', path: '../test/fixtures/weather-transform.js' },
+      { type: 'fixture', data: {
         foo: 'bar'
-      }
-    }
+      }}
+    ]
   }
 };
 
 var services = {
   weather: {
-    get: {
-      uri: 'http://query.yahooapis.com/v1/public/yql?q=select * from weather.forecast where location=29681&format=json',
-      transform: ['test/weather-transform.js'],
-      method: 'get'     
+    GET: {
+      uri: 'http://query.yahooapis.com/v1/public/yql?q=select * from weather.forecast where location=29681&format=json'
     }
   }
 };
@@ -60,7 +56,7 @@ app.use(function(req, res, next){
   res.json(res.locals);
 });
 
-describe('reducto module', function(){
+describe('reducto', function(){
   it('can configure static fixtures', function(done){
     request(app).get('/test/fixture').expect(200, {foo:'bar'}).end(done);
   });
