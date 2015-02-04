@@ -1,12 +1,16 @@
 var expect = require('chai').expect;
 var middleware = require('../lib/middleware');
-var middlewareFns = require('./middleware');
+var middlewareFns = require('./fixtures/middleware');
 
-describe('middleware module', function(){
-  it('converts a list of middleware modules into a list of middleware functions', function(){
-    var fns = middleware({middleware: ['test/middleware.js#testOne', 'test/middleware.js#testTwo']});
-    expect(fns).to.have.length(2);
-    expect(fns[0].toString()).to.equal(middlewareFns.testOne.toString());
-    expect(fns[1].toString()).to.equal(middlewareFns.testTwo.toString());
+describe('middleware', function(){
+  it('returns a middleware function at a given "path"', function(){
+    var fn = middleware({path: '../test/fixtures/middleware.js#testOne'});
+    expect(fn).to.exist();
+    expect(fn.toString()).to.equal(middlewareFns.testOne.toString());
+  });
+
+  it('can also use connect/express 3rd-party middleware', function(){
+    var fn = middleware({path: 'body-parser'});
+    expect(fn).to.exist();
   });
 });
