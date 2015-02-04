@@ -1,26 +1,20 @@
-var _ = require('underscore');
+require('es6-promise').polyfill();
+
+var _ = require('lodash');
 var utils = require('./lib/utils');
-var middleware = require('./lib/middleware');
-var fixture = require('./lib/fixture');
-var service = require('./lib/service');
-var transform = require('./lib/transform');
-var view = require('./lib/view');
+
 /**
  * Reads in route and service definitions from JSON and configures
  * express routes with the appropriate middleware for each.
  * @module router
+ * @param {object} app - an Express instance
+ * @param {object} routes - a routes config
+ * @param {object} services - a services config
  */
 module.exports = function(app, routes, services){
   _.each(routes, function(methods, route){
-    _.each(methods, function(config, method){
-      app[method](route, utils.loadStack(
-        config,
-        middleware,
-        fixture,
-        service.bind(null, services),
-        transform,
-        view
-      ));
+    _.each(methods, function(configs, method){
+      app[method.toLowerCase()](route, utils.loadStack(configs, services));
     });
   });
 };
