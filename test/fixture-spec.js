@@ -1,10 +1,9 @@
 var expect = require('chai').expect;
 var fixture = require('../lib/fixture');
 
-describe('fixture module', function(){
-
-  it('returns static data defined by "fixture" key', function(done){
-    var fn = fixture({fixture: { foo: 'bar' }});
+describe('fixture', function(){
+  it('returns static data', function(done){
+    var fn = fixture({data: { foo: 'bar' }});
     var res = { locals: { boop: 'beep' }};
     fn({}, res, function(error){
       if ( error ) return done(error);
