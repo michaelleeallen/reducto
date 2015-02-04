@@ -3,7 +3,6 @@ var expect = require('chai').expect;
 var request = require('supertest');
 var express = require('express');
 var dust = require('dustjs-linkedin');
-var srvStatic = require('serve-static');
 var reducto = require('../index');
 var app = express();
 
@@ -17,19 +16,19 @@ app.set('view engine', 'dust');
 
 reducto(app, {
   '/test': {
-    get: {
-      viewName: 'test-view',
-      fixture: {
+    GET: [
+      { type: 'fixture', data: {
         name: 'World'
-      }
-    }
+      }},
+      { type: 'view', name: 'test-view'}
+    ]
   },
   '/noview': {
-    get: {
-      fixture: {
+    GET: [
+      { type: 'fixture', data: {
         name: 'WORLD'
-      }
-    }
+      }}
+    ]
   }
 }, {});
 
@@ -37,7 +36,7 @@ app.use(function(req, res, next){
   res.json(res.locals);
 });
 
-describe('view config module', function(){
+describe('view', function(){
   it('renders a view if specified', function(done){
     request(app).get('/test').expect(200, '<p>Hello, World</p>').end(done);
   });
