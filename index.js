@@ -4,9 +4,9 @@ var _ = require('lodash');
 var utils = require('./lib/utils');
 
 /**
- * Reads in route and service definitions from JSON and configures
+ * Read in route and service definitions from JSON and configure
  * express routes with the appropriate middleware for each.
- * @module router
+ * @module reducto
  * @param {object} app - an Express instance
  * @param {object} routes - a routes config
  * @param {object} services - a services config
