@@ -4,7 +4,7 @@ var middlewareFns = require('./fixtures/middleware');
 
 describe('middleware', function(){
   it('returns a middleware function at a given "path"', function(){
-    var fn = middleware({path: '../test/fixtures/middleware.js#testOne'});
+    var fn = middleware({path: 'test/fixtures/middleware.js#testOne'});
     expect(fn).to.exist();
     expect(fn.toString()).to.equal(middlewareFns.testOne.toString());
   });

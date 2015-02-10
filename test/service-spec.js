@@ -29,15 +29,4 @@ describe('service', function(){
       done();
     });
   });
-
-  it('can return a fixture if configured', function(done){
-    services.weather.GET.fixture = { foo: 'bar' };
-    res.locals = {};
-    var svc = service({ name: 'GET:weather' }, services);
-    svc(req, res, function(error){
-      if ( error ) return done(error);
-      expect(res.locals.foo).to.equal('bar');
-      done();
-    });
-  });
 });

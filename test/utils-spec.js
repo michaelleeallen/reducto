@@ -35,7 +35,7 @@ describe('utils', function(){
       expect(utils.lookupFn('body-parser')).to.be.a('function');
     });
     it('will throw an error if no module found', function(){
-      expect(utils.lookupFn.bind({},'foo')).to.throw('No module found at foo.');
+      expect(utils.lookupFn.bind({},'foo')).to.throw('Module not found at foo.');
     });
   });
 });
