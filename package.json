@@ -5,11 +5,11 @@
     "type": "git",
     "url": "https://github.com/michaelleeallen/reducto"
   },
-  "description": "Provides configuration-based routing and service definitions for express.js.",
+  "description": "Configuration-based routing and service definitions for express.js.",
   "main": "index.js",
   "scripts": {
     "start": "node examples/app",
-    "test": "grunt test"
+    "test": "./node_modules/.bin/grunt test"
   },
   "author": {
     "name": "Michael Allen",
@@ -28,19 +28,21 @@
   "dependencies": {
     "es6-promise": "^2.0.1",
     "lodash": "^3.1.0",
-    "q": "^1.0.1",
     "request": "^2.36.0"
   },
   "devDependencies": {
     "body-parser": "^1.3.0",
     "chai": "^1.9.1",
     "express": "^4.4.0",
+    "grunt": "~0.4.5",
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-mocha-test": "^0.11.0",
     "load-grunt-tasks": "^0.4.0",
     "mocha": "^1.20.0",
-    "supertest": "^0.13.0",
-    "dustjs-linkedin": "^2.3.5",
-    "grunt": "~0.4.5"
+    "node-jsx": "^0.12.4",
+    "react": "^0.12.2",
+    "sinon": "^1.12.2",
+    "sinon-chai": "^2.6.0",
+    "supertest": "^0.13.0"
   }
 }
