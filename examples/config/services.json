@@ -1,9 +1,7 @@
 {
   "weather": {
-    "get": {
-      "uri": "http://query.yahooapis.com/v1/public/yql?q=select * from weather.forecast where location={zipcode}&format=json",
-      "transform": ["examples/lib/weather-transform.js"],
-      "method": "get"
+    "GET": {
+      "uri": "http://query.yahooapis.com/v1/public/yql?q=select * from weather.forecast where location={zipcode}&format=json"      
     }
   }
 }

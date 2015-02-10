@@ -1,11 +1,12 @@
 {
   "/weather/:zipcode": {
-    "get": {
-      "viewName": "index",
-      "services": ["get:weather"],
-      "fixture": {
+    "GET": [
+      { "type": "service", "name": "GET:weather" },
+      { "type": "transform", "path": "./examples/lib/weather-transform.js"},
+      { "type": "fixture", "data": {
         "message": "Current weather"
-      }
-    }
+      }},
+      { "type": "view", "name": "weather" }
+    ]
   }
 }

@@ -1,5 +1,5 @@
 module.exports = function(data){
   data.weather = data.query.results.channel;
-  data.query = undefined;
+  delete data.query;
   return data;
 };
