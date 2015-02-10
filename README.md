@@ -1,9 +1,12 @@
-# Reducto [![Build Status](https://travis-ci.org/michaelleeallen/reducto.png)](https://travis-ci.org/michaelleeallen/reducto)
+# Reducto
+[![Build Status](https://travis-ci.org/michaelleeallen/reducto.png)](https://travis-ci.org/michaelleeallen/reducto)
+
+[![devDependency Status](https://david-dm.org/michaelleeallen/reducto.svg)](https://david-dm.org/michaelleeallen/reducto)
 
 A lightweight configuration framework for express.js that aims to simplify creating routes and APIs for apps with
 a distributed back-end.
 
-The main goal of reducto is to break apart the routing mechanism into smaller, more cohesive components. By reducing your app to just middleware, data transforms, and reusable service calls you end up with a smaller set of code to reason about and thus make your app easier to write and maintain.
+The main goal of reducto is to break apart the routing mechanism into smaller, more cohesive components. By reducing your app to middleware, data transforms, and reusable service calls you end up with a smaller set of code to reason about and thus make your app easier to write and maintain.
 
 
 ## Installation
@@ -17,9 +20,8 @@ yourself:
 
 	npm install express --save
 
-Other than express the only real requirement is that you provide some JSON configuration
-for your routes and/or service calls, and that you provide a middleware function to handle
-the response for your routes:
+You must include a routes config that defines how to construct your app(see below). A services config is optional, but useful for connecting to distributed APIs.
+
 ```javascript
 var express = require('express');
 var reducto = require('reducto');
@@ -29,66 +31,74 @@ var services = require('your_services_config.json');
 
 reducto(app, routes, services);
 
-// middleware to handle any non-view responses, like JSON...
-
 app.listen(3000);
 ```
 
-All of the data collected by reducto will be placed in `res.locals`, so your response-handling
-middleware should look there:
+## Routes
 
-```javascript
-//...
-res.render('mytemplate', res.locals);
-//... or ...
-res.json(res.locals);
-```
+Routes can be configured to use middleware, views, fixtures and service calls. Each piece is optional, and should be added in the order you want them to run:
 
-## Route configuration
-
-Routes can be configured to use middleware, views, fixtures and service calls. Each piece is optional:
 ```json
 {
   "/my/route/:id": {
-    "get": {
-      "viewName": "my-view",
-      "middleware": ["lib/middleware.js#myFunc"],
-      "services": ["get:myRESTfulEndpoint"],
-      "fixture": {
+    "GET": [
+      { "type": "middleware", "path": "./lib/middleware.js#myFuncName" },
+      { "type": "service", "name": "GET:myEndpoint" },
+      { "type": "fixture", "data": {
         "title": "My awesome page title"
-      }
-    },
-    "post": {
-      "services": ["post:myRESTfulEndpoint"],
-      "transform": ["lib/my-post-transform.js"]
-    }
+      }},
+      { "type": "view", "name": "my-view" }
+    ],
+    "POST": [
+      { "type": "service", "name": "POST:myEndpoint" },
+      { "type": "transform", "path": "./lib/my-post-transform.js" }
+    ]
   }
 }
 ```
 
 Each route is defined by its URI pattern. This can be any legal express route pattern. Next you define
-the HTTP methods per route. Each method can have its own configuration. The config options are:
-- `viewName` the path to the view to render
-- `middleware` is a list of middleware functions to call, called in sequential order.
-- `services` is a list of service configuration keys, called in sequential order.
-- `fixture` is any valid JSON data to include with the routes collected data
-- `transform` is a list of data transform functions to call after the route is finished
+the HTTP methods per route. Each method has its own list of configurations.
 
-## Service configuration
+### middleware
 
-Services, or rather, service calls, represent any callable HTTP endpoint. Right now only RESTful enpoints that
-consume and return JSON are supported.
+#### path
+The file path to the middleware file(with optional function name as *file.js#myFuncName*), or the name of any 3rd-party express middleware
+
+### service
+
+#### name
+The name of service endpoint from your services config file.
+
+### transform
+
+#### path
+The file path to the transform function(with optional function name as *file.js#myFuncName*).
+
+### fixture
+
+#### data
+A JSON object containing static data. This data is added to the cumulative `res.locals` object.
+
+### view
+
+#### name
+The name of a view to render with `res.render`. You must provide express with a rendering engine for this to work. See examples.
+
+
+## Services
+
+Services, or rather, service calls, represent any callable HTTP endpoint. Right now only RESTful enpoints are supported.
 ```json
 {
-  "myRESTfulEndpoint": {
-    "get": {
+  "myEndpoint": {
+    "GET": {
       "uri": "http://myws.com/api/someresource/{id}",
       "headers": {
         "api-key": "adlfplkjf09123lkj32lkj3"
-      },
-      "transform": ["path/to/my/transform.js#someMethod"]
+      }
     },
-    "post": {
+    "POST": {
       "uri": "http://myws.com/api/someresource"
     }
   }
@@ -100,7 +110,10 @@ placing a corresponding URI token in the service definition: `http://myws.com/ap
 will map to `:id`.
 
 Service calls use [mikeal's](https://github.com/mikeal) [request](https://github.com/mikeal/request) module to handle HTTP, so any valid configuration for
-**request** applies here. The `transform` key refers to any module/method that accepts JSON as input and produces JSON as output:
+**request** applies here.
+
+## Data Transforms
+Transforms are any module/method that accepts JSON as input and produces JSON as output. Transforms will be passed in the cumulative `res.locals` object.
 
 ```javascript
 module.exports = function(data){
@@ -110,7 +123,7 @@ module.exports = function(data){
 ```
 These are great for when you need the data in a different format than what the service(which you may have no control over) provides.
 
-## Running the example application
+## Examples
 
 Navigate to the root directory and run `npm start`. This will start the example app at
 `http://localhost:3000`. You can view the example page by pointing your browser to `http://localhost:3000/weather/:zipcode`
