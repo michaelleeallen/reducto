@@ -5,16 +5,49 @@ var services = {
 };
 
 describe('utils', function(){
-
-  describe('#loadStack', function(){
-    it('will return a list of middleware functions', function(){
-      var stack = utils.loadStack([
-        { type: 'middleware', path: '../test/fixtures/middleware.js#headerTest' },
+/**
+ * { type: 'middleware', path: '../test/fixtures/middleware.js#headerTest' },
         { type: 'service', name: 'GET:weather'},
         { type: 'transform', path: '../test/fixtures/transforms.js#foo' },
         { type: 'fixture', data: { boop: 'beep' }}
-      ], services);
-      expect(stack).to.have.length(4);
+        */
+  describe('#loadStack', function(){
+    it('should map service calls to a single middleware function', function(){
+      var stack = utils.loadStack({
+        services: [
+          { type: 'service', name: 'GET:weather'},
+          { type: 'service', name: 'GET:weather'}
+        ]
+      }, services);
+      expect(stack).to.have.length(1);
+    });
+    
+    it('should map "before" middleware', function() {
+      var stack = utils.loadStack({
+        before: [
+          { type: 'middleware', path: '../test/fixtures/middleware.js#headerTest' }
+        ],
+        services: [
+          { type: 'service', name: 'GET:weather'},
+          { type: 'service', name: 'GET:weather'}
+        ]
+      }, services);
+      
+      expect(stack).to.have.length(2);
+    });
+    
+    it('should map "after" middleware', function() {
+      var stack = utils.loadStack({
+        after: [
+          { type: 'middleware', path: '../test/fixtures/middleware.js#headerTest' }
+        ],
+        services: [
+          { type: 'service', name: 'GET:weather'},
+          { type: 'service', name: 'GET:weather'}
+        ]
+      }, services);
+      
+      expect(stack).to.have.length(2);
     });
   });
 

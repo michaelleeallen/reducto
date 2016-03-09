@@ -1,32 +1,77 @@
-require('es6-promise').polyfill();
-
 var expect = require('chai').expect;
-var service = require('../lib/service');
+var proxyquire = require('proxyquire');
+var sinon = require('sinon');
 
-var services = {
-  weather: {
-    GET: {
-      uri: 'http://query.yahooapis.com/v1/public/yql?q=select * from weather.forecast where location=29681&format=json'
+const RES_FIXTURE = {
+  query: {
+    results: {
+      channel: {title: 'Yahoo! Weather - Simpsonville, SC'},
+      news: ['A news story']
     }
   }
 };
-var svcs = service({ name: 'GET:weather' }, services);
-var req = {};
-var res = { locals: {} };
-var results;
 
-describe('service', function(){
+var callServiceStub = sinon.stub().returns(new Promise(res => res(RES_FIXTURE)));
 
-  it('maps service name to a middleware function', function(){
-    expect(svcs).to.be.a('function');
+var service = proxyquire('../lib/service', {
+  './service-call': callServiceStub
+});
+
+
+const SERVICES = {
+  weather: {
+    GET: {
+      uri: 'http://example.com/api/weather/{zip}?days={days}'
+    }
+  },
+  news: {
+    GET: {
+      uri: 'http://example.com/api/news/{zip}'
+    }
+  }
+};
+
+const CONFIG = {
+  services: [
+    {name: "GET:weather", dataMap: {
+      weather: "query.results.channel"
+    }},
+    {name: 'GET:news', dataMap: {
+      news: 'query.results.news'
+    }}
+  ]
+};
+
+const svcs = service(CONFIG.services, SERVICES);
+
+describe('service', function() {
+  
+  before(function(done) {
+    var req = {query: {days: '5'}, params: {zip: '29681'}};
+    this.response = {locals: {}};
+    svcs(req, this.response, done);
+  });
+  
+  it('should map session values to service URI tokens', function() {
+    var expectedURI = 'http://example.com/api/weather/29681?days=5';
+    var call1 = callServiceStub.getCall(0);
+    var requestConfig1 = call1.args[0];
+    var call2 = callServiceStub.getCall(1);
+    var requestConfig2 = call2.args[0];
+    expect(requestConfig1.uri).to.eq('http://example.com/api/weather/29681?days=5');
+    expect(requestConfig2.uri).to.eq('http://example.com/api/news/29681');
+    callServiceStub.reset();
   });
 
-  it('calls a web service and extends res.locals with the returned data', function(done){
-    svcs(req, res, function(error){
-      if ( error ) return done(error);
-      results = res.locals.query.results.channel;
-      expect(results.title).to.equal('Yahoo! Weather - Simpsonville, SC');
-      done();
-    });
+  it('should map data from service response to a specified key', function() {
+    callServiceStub.reset();
+    expect(this.response.locals.weather).to.exist;
+    expect(this.response.locals.weather.title).to.equal('Yahoo! Weather - Simpsonville, SC');
+  });
+  
+  it('should call multiple services if configured', function() {
+    callServiceStub.reset();
+    expect(this.response.locals.news).to.exist;
+    expect(this.response.locals.weather).to.exist;
   });
 });

@@ -11,10 +11,10 @@ var utils = require('./lib/utils');
  * @param {object} routes - a routes config
  * @param {object} services - a services config
  */
-module.exports = function(app, routes, services){
-  _.each(routes, function(methods, route){
-    _.each(methods, function(configs, method){
-      app[method.toLowerCase()](route, utils.loadStack(configs, services));
+module.exports = function reducto(app, routes, services) {
+  _.each(routes, (methods, route) => {
+    _.each(methods, (config, method) => {
+      app[method.toLowerCase()](route, utils.loadStack(config, services));
     });
   });
 };
