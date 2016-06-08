@@ -28,8 +28,8 @@ describe('utils', function(){
           { type: 'middleware', path: '../test/fixtures/middleware.js#headerTest' }
         ],
         services: [
-          { type: 'service', name: 'GET:weather'},
-          { type: 'service', name: 'GET:weather'}
+          { name: 'GET:weather'},
+          { name: 'GET:weather'}
         ]
       }, services);
       

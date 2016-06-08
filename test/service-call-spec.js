@@ -1,17 +1,43 @@
-require('es6-promise').polyfill();
-
 var expect = require('chai').expect;
-var callService = require('../lib/service-call');
+var proxyquire = require('proxyquire');
+var sinon = require('sinon');
+var requestStub = sinon.stub();
+var callService = proxyquire('../lib/service-call', {
+  'request': requestStub
+});
 
 describe('service-call', function(){
+  afterEach(function() {
+    requestStub.reset();
+  });
+  
   it('makes web service calls', function(done){
+    requestStub.callsArgWith(1, null, {}, '{"foo": "bar"}');
     callService({
-      url: 'http://query.yahooapis.com/v1/public/yql?q=select * from weather.forecast where location=29681&format=json'
-    }).then(
-      function(data){
-        expect(data.query).to.exist();
-        expect(data.query.results.channel.title).to.equal('Yahoo! Weather - Simpsonville, SC');
-        done();
-      }, done);
+      uri: 'http://example.com/api/test'
+    }).then((data) => {
+      expect(data.foo).to.eq('bar');
+      done();
+    }).catch(done);
+  });
+  
+  it('will bail if request error encountered', function(done) {
+    requestStub.callsArgWith(1, {message: 'Oh no!'}, {}, null);
+    callService({
+      uri: 'http://example.com/api/test'
+    }).catch((e) => {
+      expect(e.message).to.eq('Oh no!');
+      done();
+    });
+  });
+  
+  it('will fail if it cannot parse JSON response', function(done) {
+    requestStub.callsArgWith(1, null, {}, '<html>');
+    callService({
+      uri: 'http://example.com/api/test'
+    }).catch((e) => {
+      expect(e.message).to.eq('Unexpected token <');
+      done();
+    });
   });
 });

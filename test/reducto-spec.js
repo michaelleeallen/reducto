@@ -20,11 +20,11 @@ describe('reducto', function(){
 
     var routes = {
       "/foo": {
-        "GET": [
-          { type: "fixture", data: {
-            bar: "baz"
-          }}
-        ]
+        "GET": {
+          services: [
+            {name: 'GET:foo'}
+          ]
+        }
       }
     };
 
@@ -34,6 +34,5 @@ describe('reducto', function(){
     expect(app.get).to.have.been.calledOnce;
     expect(utils.loadStack).to.have.been.calledOnce;
     expect(utils.loadStack).to.have.been.calledWith(routes['/foo'].GET, {});
-    expect(utils.TYPES.fixture).to.have.been.calledOnce;
   });
 });

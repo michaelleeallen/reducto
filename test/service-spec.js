@@ -1,48 +1,14 @@
 var expect = require('chai').expect;
 var proxyquire = require('proxyquire');
 var sinon = require('sinon');
+var fixture = require('./fixtures/services');
 
-const RES_FIXTURE = {
-  query: {
-    results: {
-      channel: {title: 'Yahoo! Weather - Simpsonville, SC'},
-      news: ['A news story']
-    }
-  }
-};
-
-var callServiceStub = sinon.stub().returns(new Promise(res => res(RES_FIXTURE)));
-
+var callServiceStub = sinon.stub().returns(new Promise(res => res(fixture.RESPONSE)));
 var service = proxyquire('../lib/service', {
   './service-call': callServiceStub
 });
 
-
-const SERVICES = {
-  weather: {
-    GET: {
-      uri: 'http://example.com/api/weather/{zip}?days={days}'
-    }
-  },
-  news: {
-    GET: {
-      uri: 'http://example.com/api/news/{zip}'
-    }
-  }
-};
-
-const CONFIG = {
-  services: [
-    {name: "GET:weather", dataMap: {
-      weather: "query.results.channel"
-    }},
-    {name: 'GET:news', dataMap: {
-      news: 'query.results.news'
-    }}
-  ]
-};
-
-const svcs = service(CONFIG.services, SERVICES);
+const svcs = service(fixture.CONFIG.services, fixture.SERVICES);
 
 describe('service', function() {
   

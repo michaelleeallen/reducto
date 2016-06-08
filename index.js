@@ -1,5 +1,4 @@
-require('es6-promise').polyfill();
-
+'use-strict';
 var _ = require('lodash');
 var utils = require('./lib/utils');
 
