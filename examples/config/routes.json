@@ -1,12 +1,35 @@
 {
-  "/weather/:zipcode": {
-    "GET": [
-      { "type": "service", "name": "GET:weather" },
-      { "type": "transform", "path": "./examples/lib/weather-transform.js"},
-      { "type": "fixture", "data": {
-        "message": "Current weather"
-      }},
-      { "type": "view", "name": "weather" }
-    ]
+  "/local/:zipcode": {
+    "GET": {
+      "services": [
+        {
+          "name": "GET:weather", 
+          "dataMap": {
+            "weather": {
+              "title": "city.name",
+              "forecast": "list"
+            }
+          }
+        },
+        {
+          "name": "GET:pizza", 
+          "dataMap": {
+            "pizza": "query.results.Result"
+          }
+        }
+      ],
+      "after": [
+        { 
+          "type": "fixture", 
+          "data": {
+            "message": "Local Scene"
+          }
+        },
+        {
+          "type": "view", 
+          "name": "weather"
+        }
+      ]
+    }
   }
 }

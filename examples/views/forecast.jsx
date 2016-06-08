@@ -1,24 +1,34 @@
 var React = require("react");
 
+const ForecastItem = (props) => {
+  var dtText = new Date(props.dt_txt).toDateString();
+  return (
+    <article key={props.dt}>
+      {dtText} - {props.main.temp}&deg; - {props.weather.map(w => <span>{w.main}</span>)}
+    </article>
+  );
+};
+
 module.exports = React.createClass({
 
   displayName: 'Forecast',
 
   propTypes: {
     title: React.PropTypes.string,
-    link: React.PropTypes.string,
-    item: React.PropTypes.shape({
-      description: React.PropTypes.string
-    })
+    forecast: React.PropTypes.arrayOf(React.PropTypes.object)
+  },
+  
+  getDefaultProps() {
+    return {item: {}};
   },
 
   render: function(){
     return (
       <article className="forecast">
         <header>
-          <a href={this.props.link}>{this.props.title}</a>
+          <h3>{this.props.title}</h3>
         </header>
-        <section className="body" dangerouslySetInnerHTML={{__html: this.props.item.description}}/>
+        {this.props.forecast.map(f => ForecastItem(f))}
       </article>
     );
   }

@@ -1,17 +1,18 @@
-require('node-jsx').install({harmony: true, extension: '.jsx'});
+require("babel-register");
 
 var React = require('react');
+var ReactDOMServer = require('react-dom/server');
 
 module.exports = function(name, opts, cb){
   var view = require(name);
   var viewFactory = React.createFactory(view);
-  var markup = ['<!Doctype html/>'];
+  var markup = '';
 
   try {
-    markup.push(React.renderToString(viewFactory(opts)));
+    markup = `<!Doctype html/>${ReactDOMServer.renderToString(viewFactory(opts))}`;
   } catch( e ) {
     console.log(e);
     cb(e);
   }
-  cb(null, markup.join(''));
+  cb(null, markup);
 };

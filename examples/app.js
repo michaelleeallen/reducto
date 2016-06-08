@@ -5,6 +5,8 @@ var reactRender = require('./lib/react-view-engine');
 var app = express();
 var routes = require('./config/routes.json');
 var services = require('./config/services.json');
+const IP = process.env.IP || '0.0.0.0';
+const PORT = process.env.PORT || 3000;
 
 // setup rendering engine
 app.engine('jsx', reactRender);
@@ -15,4 +17,4 @@ app.set('view engine', 'jsx');
 reducto(app, routes, services);
 
 // start the show
-app.listen(3000, console.log.bind(null, 'Reducto example started. Goto http://localhost:3000/weather/:zipcode'));
+app.listen(PORT, IP, console.log.bind(null, `Reducto example started. Goto http://${IP}:${PORT}/local/:zipcode`));
