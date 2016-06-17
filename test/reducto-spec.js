@@ -13,13 +13,12 @@ var app = {
 };
 
 describe('reducto', function(){
-
-  after(function() {
-   utils.loadStack.restore();
+  afterEach(function() {
+    utils.loadStack.restore();
   });
 
   it('can configure routes', function(){
-    sinon.spy(utils, 'loadStack');
+    sinon.stub(utils, 'loadStack');
 
     var routes = {
       "/foo": {

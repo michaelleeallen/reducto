@@ -6,9 +6,9 @@ const services = {
 
 describe('utils', function(){
   describe('#loadStack', function(){
-    it('should map service calls to a single middleware function', function(){
+    it('should map batch service calls to a single middleware function', function(){
       const stack = utils.loadStack([
-        { type: 'async', services: [
+        { type: 'batch', services: [
           { type: 'service', name: 'GET:weather'},
           { type: 'service', name: 'GET:weather'}
         ]}
@@ -17,27 +17,13 @@ describe('utils', function(){
       expect(stack).to.have.length(2); // expect length to be 2 because we add a response middleware to every route
     });
     
-    it('should map "before" middleware', function() {
+    it('should map middleware function from config objects', function() {
       const stack = utils.loadStack([
-        { type: 'middleware', path: '../test/fixtures/middleware.js#headerTest' },
-        { type: 'async', services: [
-          { type: 'service', name: 'GET:weather'},
-          { type: 'service', name: 'GET:weather'}
-        ]}
+        {type: 'middleware', path: 'test/fixtures/middleware.js#headerTest'},
+        {type: 'fixture', data: {foo: 'bar'}}
       ], services);
-      
-      expect(stack).to.have.length(3);
-    });
-    
-    it('should map "after" middleware', function() {
-      const stack = utils.loadStack([
-        { type: 'async', services: [
-          { type: 'service', name: 'GET:weather'},
-          { type: 'service', name: 'GET:weather'}
-        ]},
-        { type: 'middleware', path: '../test/fixtures/middleware.js#headerTest' }
-      ], services);
-      
+
+      // expect length to be 3 because we add a response middleware to every route
       expect(stack).to.have.length(3);
     });
   });

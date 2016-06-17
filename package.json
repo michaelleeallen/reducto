@@ -45,8 +45,6 @@
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "sinon": "^1.17.3",
-    "sinon-as-promised": "^4.0.0",
-    "sinon-chai": "^2.8.0",
-    "supertest": "^1.2.0"
+    "sinon-chai": "^2.8.0"
   }
 }

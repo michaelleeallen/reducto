@@ -1,8 +1,8 @@
-var expect = require('chai').expect;
-var proxyquire = require('proxyquire');
-var sinon = require('sinon');
-var requestStub = sinon.stub();
-var callService = proxyquire('../lib/service-call', {
+const expect = require('chai').expect;
+const proxyquire = require('proxyquire');
+const sinon = require('sinon');
+const requestStub = sinon.stub();
+const callService = proxyquire('../lib/service-call', {
   'request': requestStub
 });
 

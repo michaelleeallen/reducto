@@ -20,15 +20,12 @@ const SERVICES = {
   }
 };
 
-const CONFIG = [
-    {name: "GET:weather", dataSchema: {
-      weather: "query.results.channel"
-    }},
-    {name: 'GET:news', dataSchema: {
-      news: 'query.results.news'
-    }}
-  ]
-;
+const CONFIG = {
+  name: "GET:weather",
+  dataSchema: {
+    weather: "query.results.channel"
+  }
+};
 
 module.exports = {
   CONFIG,

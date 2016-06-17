@@ -5,7 +5,7 @@ const reactRender = require('./lib/react-view-engine');
 const app = express();
 const routes = require('./config/routes.json');
 const services = require('./config/services.json');
-const IP = process.env.IP || '0.0.0.0';
+const IP = process.env.IP || 'localhost';
 const PORT = process.env.PORT || 3000;
 
 // setup rendering engine
