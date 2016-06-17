@@ -1,53 +1,44 @@
-var utils = require('../lib/utils');
-var expect = require('chai').expect;
-var services = {
+const utils = require('../lib/utils');
+const expect = require('chai').expect;
+const services = {
   weather: { GET: { uri: 'test' } }
 };
 
 describe('utils', function(){
-/**
- * { type: 'middleware', path: '../test/fixtures/middleware.js#headerTest' },
-        { type: 'service', name: 'GET:weather'},
-        { type: 'transform', path: '../test/fixtures/transforms.js#foo' },
-        { type: 'fixture', data: { boop: 'beep' }}
-        */
   describe('#loadStack', function(){
     it('should map service calls to a single middleware function', function(){
-      var stack = utils.loadStack({
-        services: [
+      const stack = utils.loadStack([
+        { type: 'async', services: [
           { type: 'service', name: 'GET:weather'},
           { type: 'service', name: 'GET:weather'}
-        ]
-      }, services);
-      expect(stack).to.have.length(1);
+        ]}
+      ], services);
+
+      expect(stack).to.have.length(2); // expect length to be 2 because we add a response middleware to every route
     });
     
     it('should map "before" middleware', function() {
-      var stack = utils.loadStack({
-        before: [
-          { type: 'middleware', path: '../test/fixtures/middleware.js#headerTest' }
-        ],
-        services: [
-          { name: 'GET:weather'},
-          { name: 'GET:weather'}
-        ]
-      }, services);
+      const stack = utils.loadStack([
+        { type: 'middleware', path: '../test/fixtures/middleware.js#headerTest' },
+        { type: 'async', services: [
+          { type: 'service', name: 'GET:weather'},
+          { type: 'service', name: 'GET:weather'}
+        ]}
+      ], services);
       
-      expect(stack).to.have.length(2);
+      expect(stack).to.have.length(3);
     });
     
     it('should map "after" middleware', function() {
-      var stack = utils.loadStack({
-        after: [
-          { type: 'middleware', path: '../test/fixtures/middleware.js#headerTest' }
-        ],
-        services: [
+      const stack = utils.loadStack([
+        { type: 'async', services: [
           { type: 'service', name: 'GET:weather'},
           { type: 'service', name: 'GET:weather'}
-        ]
-      }, services);
+        ]},
+        { type: 'middleware', path: '../test/fixtures/middleware.js#headerTest' }
+      ], services);
       
-      expect(stack).to.have.length(2);
+      expect(stack).to.have.length(3);
     });
   });
 

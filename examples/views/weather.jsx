@@ -1,8 +1,16 @@
-var React = require("react");
-var Forecast = require('./forecast');
+const React = require("react");
+const Forecast = require('./forecast');
 
-function byDistance(a, b) {
-  return a.Distance < b.Distance? -1 : a.Distance > b.Distance? 1 : 0;
+const byDistance = (a, b) => a.Distance < b.Distance? -1 : a.Distance > b.Distance? 1 : 0;
+
+const PizzaRow = (props) => {
+  return (
+    <tr>
+      <td>{props.Title}</td>
+      <td>{props.Address}, {props.City}, {props.State}</td>
+      <td>{props.Distance}</td>
+    </tr>
+  );
 }
 
 module.exports = React.createClass({
@@ -12,7 +20,16 @@ module.exports = React.createClass({
     weather: React.PropTypes.object,
     pizza: React.PropTypes.arrayOf(React.PropTypes.object)
   },
-  render: function(){
+
+  getDefaultProps() {
+    return {
+      message: '',
+      weather: {},
+      pizza: []
+    }
+  },
+
+  render() {
     return (
       <html>
         <head>
@@ -38,15 +55,7 @@ module.exports = React.createClass({
                     </tr>
                   </thead>
                   <tbody>
-                  {this.props.pizza.sort(byDistance).map((p) => {
-                    return (
-                      <tr>
-                        <td>{p.Title}</td>
-                        <td>{p.Address}, {p.City}, {p.State}</td>
-                        <td>{p.Distance}</td>
-                      </tr>
-                    );
-                  })}
+                  {this.props.pizza.sort(byDistance).map(p => PizzaRow(p))}
                   </tbody>
                 </table>
               </div>

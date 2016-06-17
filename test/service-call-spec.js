@@ -12,7 +12,7 @@ describe('service-call', function(){
   });
   
   it('makes web service calls', function(done){
-    requestStub.callsArgWith(1, null, {}, '{"foo": "bar"}');
+    requestStub.callsArgWith(1, null, {}, {"foo": "bar"});
     callService({
       uri: 'http://example.com/api/test'
     }).then((data) => {
@@ -27,16 +27,6 @@ describe('service-call', function(){
       uri: 'http://example.com/api/test'
     }).catch((e) => {
       expect(e.message).to.eq('Oh no!');
-      done();
-    });
-  });
-  
-  it('will fail if it cannot parse JSON response', function(done) {
-    requestStub.callsArgWith(1, null, {}, '<html>');
-    callService({
-      uri: 'http://example.com/api/test'
-    }).catch((e) => {
-      expect(e.message).to.eq('Unexpected token <');
       done();
     });
   });

@@ -41,7 +41,6 @@
     "express": "^4.13.4",
     "jshint": "^2.9.1",
     "mocha": "^2.4.5",
-    "node-jsx": "^0.12.4",
     "proxyquire": "^1.7.4",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",

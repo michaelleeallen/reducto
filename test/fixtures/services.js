@@ -20,16 +20,15 @@ const SERVICES = {
   }
 };
 
-const CONFIG = {
-  services: [
-    {name: "GET:weather", dataMap: {
+const CONFIG = [
+    {name: "GET:weather", dataSchema: {
       weather: "query.results.channel"
     }},
-    {name: 'GET:news', dataMap: {
+    {name: 'GET:news', dataSchema: {
       news: 'query.results.news'
     }}
   ]
-};
+;
 
 module.exports = {
   CONFIG,

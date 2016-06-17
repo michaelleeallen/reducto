@@ -1,35 +1,38 @@
 {
   "/local/:zipcode": {
-    "GET": {
-      "services": [
-        {
-          "name": "GET:weather", 
-          "dataMap": {
-            "weather": {
-              "title": "city.name",
-              "forecast": "list"
+    "GET": [
+      {
+        "type": "batch",
+        "services": [
+          {
+            "type": "service",
+            "name": "GET:weather",
+            "dataSchema": {
+              "weather": {
+                "title": "city.name",
+                "forecast": "list"
+              }
+            }
+          },
+          {
+            "type": "service",
+            "name": "GET:pizza",
+            "dataSchema": {
+              "pizza": "query.results.Result"
             }
           }
-        },
-        {
-          "name": "GET:pizza", 
-          "dataMap": {
-            "pizza": "query.results.Result"
-          }
+        ]
+      },
+      {
+        "type": "fixture",
+        "data": {
+          "message": "Local Scene"
         }
-      ],
-      "after": [
-        { 
-          "type": "fixture", 
-          "data": {
-            "message": "Local Scene"
-          }
-        },
-        {
-          "type": "view", 
-          "name": "weather"
-        }
-      ]
-    }
+      },
+      {
+        "type": "view",
+        "name": "weather"
+      }
+    ]
   }
 }

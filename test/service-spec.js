@@ -8,14 +8,15 @@ var service = proxyquire('../lib/service', {
   './service-call': callServiceStub
 });
 
-const svcs = service(fixture.CONFIG.services, fixture.SERVICES);
+const svcs = service(fixture.CONFIG, fixture.SERVICES);
 
 describe('service', function() {
   
   before(function(done) {
     var req = {query: {days: '5'}, params: {zip: '29681'}};
     this.response = {locals: {}};
-    svcs(req, this.response, done);
+    svcs(req, this.response);
+    done();
   });
   
   it('should map session values to service URI tokens', function() {

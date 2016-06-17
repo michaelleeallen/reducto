@@ -14,17 +14,18 @@ var app = {
 
 describe('reducto', function(){
 
+  after(function() {
+   utils.loadStack.restore();
+  });
+
   it('can configure routes', function(){
-    sinon.spy(utils.TYPES, 'fixture');
     sinon.spy(utils, 'loadStack');
 
     var routes = {
       "/foo": {
-        "GET": {
-          services: [
-            {name: 'GET:foo'}
-          ]
-        }
+        "GET": [
+          {type: 'service', name: 'GET:foo'}
+        ]
       }
     };
 

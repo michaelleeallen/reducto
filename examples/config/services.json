@@ -1,11 +1,13 @@
 {
   "weather": {
     "GET": {
+      "json": true,
       "uri": "http://api.openweathermap.org/data/2.5/forecast/city?zip={zipcode}&APPID=82f3305807c57ace1d490d6bffb19d6b&units=imperial"      
     }
   },
   "pizza": {
     "GET": {
+      "json": true,
       "uri": "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20local.search%20where%20zip%3D'{zipcode}'%20and%20query%3D'pizza'&format=json"
     }
   }

@@ -1,11 +1,11 @@
 require("babel-register");
 
-var React = require('react');
-var ReactDOMServer = require('react-dom/server');
+const React = require('react');
+const ReactDOMServer = require('react-dom/server');
 
 module.exports = function(name, opts, cb){
-  var view = require(name);
-  var viewFactory = React.createFactory(view);
+  const view = require(name);
+  const viewFactory = React.createFactory(view);
   var markup = '';
 
   try {

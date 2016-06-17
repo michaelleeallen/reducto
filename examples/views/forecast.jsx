@@ -1,4 +1,4 @@
-var React = require("react");
+const React = require("react");
 
 const ForecastItem = (props) => {
   var dtText = new Date(props.dt_txt).toDateString();
@@ -17,9 +17,12 @@ module.exports = React.createClass({
     title: React.PropTypes.string,
     forecast: React.PropTypes.arrayOf(React.PropTypes.object)
   },
-  
+
   getDefaultProps() {
-    return {item: {}};
+    return {
+      title: '',
+      forecast: []
+    };
   },
 
   render: function(){

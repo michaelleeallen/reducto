@@ -1,10 +1,10 @@
-var fs = require('fs');
-var express = require('express');
-var reducto = require('../');
-var reactRender = require('./lib/react-view-engine');
-var app = express();
-var routes = require('./config/routes.json');
-var services = require('./config/services.json');
+const fs = require('fs');
+const express = require('express');
+const reducto = require('../');
+const reactRender = require('./lib/react-view-engine');
+const app = express();
+const routes = require('./config/routes.json');
+const services = require('./config/services.json');
 const IP = process.env.IP || '0.0.0.0';
 const PORT = process.env.PORT || 3000;
 
