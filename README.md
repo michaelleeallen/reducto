@@ -1,6 +1,8 @@
 # Reducto
 [![Build Status](https://travis-ci.org/michaelleeallen/reducto.png)](https://travis-ci.org/michaelleeallen/reducto)
 
+[![Code Climate](https://codeclimate.com/github/michaelleeallen/reducto/badges/gpa.svg)](https://codeclimate.com/github/michaelleeallen/reducto)
+
 [![devDependency Status](https://david-dm.org/michaelleeallen/reducto.svg)](https://david-dm.org/michaelleeallen/reducto)
 
 A lightweight configuration framework for express.js that aims to simplify creating routes and APIs for apps with
