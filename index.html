@@ -34,37 +34,30 @@
           <h1>
 <a id="reducto" class="anchor" href="#reducto" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Reducto</h1>
 
-<p><a href="https://travis-ci.org/michaelleeallen/reducto"><img src="https://travis-ci.org/michaelleeallen/reducto.png" alt="Build Status"></a></p>
+<p><a href="https://travis-ci.org/michaelleeallen/reducto"><img src="https://travis-ci.org/michaelleeallen/reducto.png" alt="Build Status"></a> <a href="https://codeclimate.com/github/michaelleeallen/reducto"><img src="https://codeclimate.com/github/michaelleeallen/reducto/badges/gpa.svg" alt="Code Climate"></a> <a href="https://david-dm.org/michaelleeallen/reducto"><img src="https://david-dm.org/michaelleeallen/reducto.svg" alt="devDependency Status"></a></p>
 
-<p><a href="https://david-dm.org/michaelleeallen/reducto"><img src="https://david-dm.org/michaelleeallen/reducto.svg" alt="devDependency Status"></a></p>
-
-<p>A lightweight configuration framework for express.js that aims to simplify creating routes and APIs for apps with
-a distributed back-end.</p>
-
-<p>The main goal of reducto is to break apart the routing mechanism into smaller, more cohesive components. By reducing your app to middleware, data transforms, and reusable service calls you end up with a smaller set of code to reason about and thus make your app easier to write and maintain.</p>
+<p>A lightweight configuration framework for express.js that aims to simplify creating API endpoints with
+a distributed back-end. Reducto acts as an aggregator that allows you to declare routes and services in a straighforward,
+easy-to-scan way.</p>
 
 <h2>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
 
-<pre><code>npm install reducto
+<p>Reducto only provides configuration for express, so you will need to install express along with reducto:</p>
+
+<pre><code>npm install reducto express --save
 </code></pre>
 
 <h2>
 <a id="project-setup" class="anchor" href="#project-setup" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Project Setup</h2>
 
-<p>Reducto only provides configuration for express, so you will need to include express
-yourself:</p>
+<p>You must provide both a routes and services config to reducto along with your express app, and reducto then parses your configuration and builds your express routes with all the configured middleware.</p>
 
-<pre><code>npm install express --save
-</code></pre>
-
-<p>You must include a routes config that defines how to construct your app(see below). A services config is optional, but useful for connecting to distributed APIs.</p>
-
-<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> express <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>express<span class="pl-pds">'</span></span>);
-<span class="pl-k">var</span> reducto <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>reducto<span class="pl-pds">'</span></span>);
-<span class="pl-k">var</span> app <span class="pl-k">=</span> <span class="pl-en">express</span>();
-<span class="pl-k">var</span> routes <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>your_route_config.json<span class="pl-pds">'</span></span>);
-<span class="pl-k">var</span> services <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>your_services_config.json<span class="pl-pds">'</span></span>);
+<div class="highlight highlight-source-js"><pre><span class="pl-k">const</span> <span class="pl-c1">express</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>express<span class="pl-pds">'</span></span>);
+<span class="pl-k">const</span> <span class="pl-c1">reducto</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>reducto<span class="pl-pds">'</span></span>);
+<span class="pl-k">const</span> <span class="pl-c1">app</span> <span class="pl-k">=</span> <span class="pl-en">express</span>();
+<span class="pl-k">const</span> <span class="pl-c1">routes</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>your_route_config.json<span class="pl-pds">'</span></span>);
+<span class="pl-k">const</span> <span class="pl-c1">services</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>your_services_config.json<span class="pl-pds">'</span></span>);
 
 <span class="pl-en">reducto</span>(app, routes, services);
 
@@ -73,7 +66,8 @@ yourself:</p>
 <h2>
 <a id="routes" class="anchor" href="#routes" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Routes</h2>
 
-<p>Routes can be configured to use middleware, views, fixtures and service calls. Each piece is optional, and should be added in the order you want them to run:</p>
+<p>The route configuration file lets you declare what endpoints you expose and what those endpoints do.
+Routes can be configured to use middleware, views, fixtures and service calls. Middlware should be added in the order you want them to run.</p>
 
 <div class="highlight highlight-source-json"><pre>{
   <span class="pl-s"><span class="pl-pds">"</span>/my/route/:id<span class="pl-pds">"</span></span>: {
@@ -93,59 +87,62 @@ yourself:</p>
 }</pre></div>
 
 <p>Each route is defined by its URI pattern. This can be any legal express route pattern. Next you define
-the HTTP methods per route. Each method has its own list of configurations.</p>
+the HTTP methods per route. Each method has its own list of middleware configurations. These configurations are used to construct the middleware that is added to your express route.</p>
 
 <h3>
-<a id="middleware" class="anchor" href="#middleware" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>middleware</h3>
+<a id="middleware-configuration-types" class="anchor" href="#middleware-configuration-types" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Middleware Configuration Types</h3>
 
 <h4>
-<a id="path" class="anchor" href="#path" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>path</h4>
+<a id="middleware" class="anchor" href="#middleware" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>middleware</h4>
 
-<p>The file path to the middleware file(with optional function name as <em>file.js#myFuncName</em>), or the name of any 3rd-party express middleware</p>
+<h5>
+<a id="path" class="anchor" href="#path" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>path</h5>
 
-<h3>
-<a id="service" class="anchor" href="#service" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>service</h3>
+<p>The path to the middleware file(with optional function name as <em>file.js#myFuncName</em>), or the name of any 3rd-party express middleware.</p>
 
 <h4>
-<a id="name" class="anchor" href="#name" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>name</h4>
+<a id="service" class="anchor" href="#service" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>service</h4>
+
+<h5>
+<a id="name" class="anchor" href="#name" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>name</h5>
 
 <p>The name of service endpoint from your services config file.</p>
 
-<h3>
-<a id="transform" class="anchor" href="#transform" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>transform</h3>
+<h4>
+<a id="batch" class="anchor" href="#batch" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>batch</h4>
+
+<h5>
+<a id="services" class="anchor" href="#services" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>services</h5>
+
+<p>A list of service middleware configurations that will be called as an asynchronous batch.</p>
 
 <h4>
-<a id="path-1" class="anchor" href="#path-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>path</h4>
+<a id="fixture" class="anchor" href="#fixture" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>fixture</h4>
 
-<p>The file path to the transform function(with optional function name as <em>file.js#myFuncName</em>).</p>
-
-<h3>
-<a id="fixture" class="anchor" href="#fixture" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>fixture</h3>
-
-<h4>
-<a id="data" class="anchor" href="#data" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>data</h4>
+<h5>
+<a id="data" class="anchor" href="#data" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>data</h5>
 
 <p>A JSON object containing static data. This data is added to the cumulative <code>res.locals</code> object.</p>
 
-<h3>
-<a id="view" class="anchor" href="#view" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>view</h3>
-
 <h4>
-<a id="name-1" class="anchor" href="#name-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>name</h4>
+<a id="view" class="anchor" href="#view" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>view</h4>
+
+<h5>
+<a id="name-1" class="anchor" href="#name-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>name</h5>
 
 <p>The name of a view to render with <code>res.render</code>. You must provide express with a rendering engine for this to work. See examples.</p>
 
 <h2>
-<a id="services" class="anchor" href="#services" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Services</h2>
+<a id="services-1" class="anchor" href="#services-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Services</h2>
 
-<p>Services, or rather, service calls, represent any callable HTTP endpoint. Right now only RESTful enpoints are supported.</p>
+<p>Services, or rather, service calls, represent any callable HTTP endpoint.</p>
 
 <div class="highlight highlight-source-json"><pre>{
   <span class="pl-s"><span class="pl-pds">"</span>myEndpoint<span class="pl-pds">"</span></span>: {
     <span class="pl-s"><span class="pl-pds">"</span>GET<span class="pl-pds">"</span></span>: {
       <span class="pl-s"><span class="pl-pds">"</span>uri<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>http://myws.com/api/someresource/{id}<span class="pl-pds">"</span></span>,
       <span class="pl-s"><span class="pl-pds">"</span>headers<span class="pl-pds">"</span></span>: {
-        <span class="pl-s"><span class="pl-pds">"</span>api-key<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>adlfplkjf09123lkj32lkj3<span class="pl-pds">"</span></span>
+        <span class="pl-s"><span class="pl-pds">"</span>Accepts<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>application/xml<span class="pl-pds">"</span></span>
       }
     },
     <span class="pl-s"><span class="pl-pds">"</span>POST<span class="pl-pds">"</span></span>: {
@@ -157,29 +154,17 @@ the HTTP methods per route. Each method has its own list of configurations.</p>
 <p>Note that the route config is using
 the express routing mechanism for parameters: <code>/my/route/:id</code>. This data can then be used in our service calls by
 placing a corresponding URI token in the service definition: <code>http://myws.com/api/someresource/{id}</code> where <code>{id}</code>
-will map to <code>:id</code>.</p>
+will map to <code>:id</code>. Query params, routes params, and the request body can all be used to pass data to the service call.</p>
 
 <p>Service calls use <a href="https://github.com/mikeal">mikeal's</a> <a href="https://github.com/mikeal/request">request</a> module to handle HTTP, so any valid configuration for
 <strong>request</strong> applies here.</p>
 
 <h2>
-<a id="data-transforms" class="anchor" href="#data-transforms" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Data Transforms</h2>
-
-<p>Transforms are any module/method that accepts JSON as input and produces JSON as output. Transforms will be passed in the cumulative <code>res.locals</code> object.</p>
-
-<div class="highlight highlight-source-js"><pre><span class="pl-c1">module</span>.<span class="pl-en">exports</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(<span class="pl-smi">data</span>){
-  <span class="pl-c">// do some modification on data ...</span>
-  <span class="pl-k">return</span> data;
-};</pre></div>
-
-<p>These are great for when you need the data in a different format than what the service(which you may have no control over) provides.</p>
-
-<h2>
 <a id="examples" class="anchor" href="#examples" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Examples</h2>
 
 <p>Navigate to the root directory and run <code>npm start</code>. This will start the example app at
-<code>http://localhost:3000</code>. You can view the example page by pointing your browser to <code>http://localhost:3000/weather/:zipcode</code>
-where <code>:zipcode</code> is any valid zip. The resulting page should show you the weather for that zipcode.</p>
+<code>http://localhost:3000</code>. You can view the example page by pointing your browser to <code>http://localhost:3000/local/:zipcode</code>
+where <code>:zipcode</code> is any valid zip. All example code can be found in the <code>/examples</code> directory.</p>
         </section>
 
         <footer>
