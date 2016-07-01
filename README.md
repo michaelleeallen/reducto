@@ -1,35 +1,28 @@
 # Reducto
-[![Build Status](https://travis-ci.org/michaelleeallen/reducto.png)](https://travis-ci.org/michaelleeallen/reducto)
+[![Build Status](https://travis-ci.org/michaelleeallen/reducto.png)](https://travis-ci.org/michaelleeallen/reducto) [![Code Climate](https://codeclimate.com/github/michaelleeallen/reducto/badges/gpa.svg)](https://codeclimate.com/github/michaelleeallen/reducto) [![devDependency Status](https://david-dm.org/michaelleeallen/reducto.svg)](https://david-dm.org/michaelleeallen/reducto)
 
-[![Code Climate](https://codeclimate.com/github/michaelleeallen/reducto/badges/gpa.svg)](https://codeclimate.com/github/michaelleeallen/reducto)
+A lightweight configuration framework for express.js that aims to simplify creating API endpoints with
+a distributed back-end. Reducto acts as an aggregator that allows you to declare routes and services in a straighforward,
+easy-to-scan way.
 
-[![devDependency Status](https://david-dm.org/michaelleeallen/reducto.svg)](https://david-dm.org/michaelleeallen/reducto)
 
-A lightweight configuration framework for express.js that aims to simplify creating routes and APIs for apps with
-a distributed back-end.
-
-The main goal of reducto is to break apart the routing mechanism into smaller, more cohesive components. By reducing your app to middleware, data transforms, and reusable service calls you end up with a smaller set of code to reason about and thus make your app easier to write and maintain.
 
 
 ## Installation
+Reducto only provides configuration for express, so you will need to install express along with reducto:
 
-	npm install reducto
+	npm install reducto express --save
 
 ## Project Setup
 
-Reducto only provides configuration for express, so you will need to include express
-yourself:
-
-	npm install express --save
-
-You must include a routes config that defines how to construct your app(see below). A services config is optional, but useful for connecting to distributed APIs.
+You must provide both a routes and services config to reducto along with your express app, and reducto then parses your configuration and builds your express routes with all the configured middleware.
 
 ```javascript
-var express = require('express');
-var reducto = require('reducto');
-var app = express();
-var routes = require('your_route_config.json');
-var services = require('your_services_config.json');
+const express = require('express');
+const reducto = require('reducto');
+const app = express();
+const routes = require('your_route_config.json');
+const services = require('your_services_config.json');
 
 reducto(app, routes, services);
 
@@ -38,7 +31,8 @@ app.listen(3000);
 
 ## Routes
 
-Routes can be configured to use middleware, views, fixtures and service calls. Each piece is optional, and should be added in the order you want them to run:
+The route configuration file lets you declare what endpoints you expose and what those endpoints do.
+Routes can be configured to use middleware, views, fixtures and service calls. Middlware should be added in the order you want them to run.
 
 ```json
 {
@@ -60,44 +54,47 @@ Routes can be configured to use middleware, views, fixtures and service calls. E
 ```
 
 Each route is defined by its URI pattern. This can be any legal express route pattern. Next you define
-the HTTP methods per route. Each method has its own list of configurations.
+the HTTP methods per route. Each method has its own list of middleware configurations. These configurations are used to construct the middleware that is added to your express route.
 
-### middleware
+### Middleware Configuration Types
 
-#### path
-The file path to the middleware file(with optional function name as *file.js#myFuncName*), or the name of any 3rd-party express middleware
+#### middleware
 
-### service
+##### path
+The path to the middleware file(with optional function name as *file.js#myFuncName*), or the name of any 3rd-party express middleware.
 
-#### name
+#### service
+
+##### name
 The name of service endpoint from your services config file.
 
-### transform
+#### batch
 
-#### path
-The file path to the transform function(with optional function name as *file.js#myFuncName*).
+##### services
+A list of service middleware configurations that will be called as an asynchronous batch.
 
-### fixture
+#### fixture
 
-#### data
+##### data
 A JSON object containing static data. This data is added to the cumulative `res.locals` object.
 
-### view
+#### view
 
-#### name
+##### name
 The name of a view to render with `res.render`. You must provide express with a rendering engine for this to work. See examples.
 
 
 ## Services
 
-Services, or rather, service calls, represent any callable HTTP endpoint. Right now only RESTful enpoints are supported.
+Services, or rather, service calls, represent any callable HTTP endpoint.
+
 ```json
 {
   "myEndpoint": {
     "GET": {
       "uri": "http://myws.com/api/someresource/{id}",
       "headers": {
-        "api-key": "adlfplkjf09123lkj32lkj3"
+        "Accepts": "application/xml"
       }
     },
     "POST": {
@@ -109,24 +106,13 @@ Services, or rather, service calls, represent any callable HTTP endpoint. Right 
 Note that the route config is using
 the express routing mechanism for parameters: `/my/route/:id`. This data can then be used in our service calls by
 placing a corresponding URI token in the service definition: `http://myws.com/api/someresource/{id}` where `{id}`
-will map to `:id`.
+will map to `:id`. Query params, routes params, and the request body can all be used to pass data to the service call.
 
 Service calls use [mikeal's](https://github.com/mikeal) [request](https://github.com/mikeal/request) module to handle HTTP, so any valid configuration for
 **request** applies here.
 
-## Data Transforms
-Transforms are any module/method that accepts JSON as input and produces JSON as output. Transforms will be passed in the cumulative `res.locals` object.
-
-```javascript
-module.exports = function(data){
-  // do some modification on data ...
-  return data;
-};
-```
-These are great for when you need the data in a different format than what the service(which you may have no control over) provides.
-
 ## Examples
 
 Navigate to the root directory and run `npm start`. This will start the example app at
-`http://localhost:3000`. You can view the example page by pointing your browser to `http://localhost:3000/weather/:zipcode`
-where `:zipcode` is any valid zip. The resulting page should show you the weather for that zipcode.
+`http://localhost:3000`. You can view the example page by pointing your browser to `http://localhost:3000/local/:zipcode`
+where `:zipcode` is any valid zip. All example code can be found in the `/examples` directory.
