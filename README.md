@@ -88,13 +88,16 @@ The name of a view to render with `res.render`. You must provide express with a 
 
 Services, or rather, service calls, represent any callable HTTP endpoint.
 
+**NOTE:** headers may contain the string `FROM_REQUEST` in order to pass header values from the request to the underlying service call.
+
 ```json
 {
   "myEndpoint": {
     "GET": {
       "uri": "http://myws.com/api/someresource/{id}",
       "headers": {
-        "Accepts": "application/xml"
+        "Accepts": "application/xml",
+        "Authorization": "FROM_REQUEST"
       }
     },
     "POST": {
@@ -103,12 +106,12 @@ Services, or rather, service calls, represent any callable HTTP endpoint.
   }
 }
 ```
-Note that the route config is using
-the express routing mechanism for parameters: `/my/route/:id`. This data can then be used in our service calls by
-placing a corresponding URI token in the service definition: `http://myws.com/api/someresource/{id}` where `{id}`
-will map to `:id`. Query params, routes params, and the request body can all be used to pass data to the service call.
 
-Service calls use [mikeal's](https://github.com/mikeal) [request](https://github.com/mikeal/request) module to handle HTTP, so any valid configuration for
+The route config is using the express routing mechanism for parameters: `/my/route/:id`. This data can then be used in our service calls by
+placing a corresponding URI token in the service definition: `http://myws.com/api/someresource/{id}` where `{id}`
+will map to `:id`. Query params, routes params, request body, and data returned from previous service calls can all be used to pass data to the service call.
+
+Service calls use the [request](https://github.com/mikeal/request) module to handle HTTP, so any valid configuration for
 **request** applies here.
 
 ## Examples

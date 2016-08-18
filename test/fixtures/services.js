@@ -10,20 +10,23 @@ const RESPONSE = {
 const SERVICES = {
   weather: {
     GET: {
-      uri: 'http://example.com/api/weather/{zip}?days={days}'
+      uri: 'http://example.com/api/weather/{zip}?days={days}&format={format}'
     }
   },
   news: {
     GET: {
+      headers: {
+        accepts: 'application/json'
+      },
       uri: 'http://example.com/api/news/{zip}'
     }
   }
 };
 
 const CONFIG = {
-  name: "GET:weather",
+  name: 'GET:weather',
   dataSchema: {
-    weather: "query.results.channel"
+    weather: 'query.results.channel'
   }
 };
 

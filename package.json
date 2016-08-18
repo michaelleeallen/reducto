@@ -10,7 +10,9 @@
   "scripts": {
     "start": "node examples/app",
     "test": "npm run lint && npm run mocha",
-    "mocha": "./node_modules/.bin/mocha test",
+    "test:watch": "npm run mocha -- --watch",
+    "test:debug": "npm run mocha -- --debug-brk",
+    "mocha": "./node_modules/.bin/mocha",
     "lint": "./node_modules/.bin/jshint lib/* index.js"
   },
   "author": {
