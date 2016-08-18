@@ -134,12 +134,15 @@ the HTTP methods per route. Each method has its own list of middleware configura
 
 <p>Services, or rather, service calls, represent any callable HTTP endpoint.</p>
 
+<p><strong>NOTE:</strong> headers may contain the string <code>FROM_REQUEST</code> in order to pass header values from the request to the underlying service call.</p>
+
 <div class="highlight highlight-source-json"><pre>{
   <span class="pl-s"><span class="pl-pds">"</span>myEndpoint<span class="pl-pds">"</span></span>: {
     <span class="pl-s"><span class="pl-pds">"</span>GET<span class="pl-pds">"</span></span>: {
       <span class="pl-s"><span class="pl-pds">"</span>uri<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>http://myws.com/api/someresource/{id}<span class="pl-pds">"</span></span>,
       <span class="pl-s"><span class="pl-pds">"</span>headers<span class="pl-pds">"</span></span>: {
-        <span class="pl-s"><span class="pl-pds">"</span>Accepts<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>application/xml<span class="pl-pds">"</span></span>
+        <span class="pl-s"><span class="pl-pds">"</span>Accepts<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>application/xml<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>Authorization<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>FROM_REQUEST<span class="pl-pds">"</span></span>
       }
     },
     <span class="pl-s"><span class="pl-pds">"</span>POST<span class="pl-pds">"</span></span>: {
@@ -148,12 +151,11 @@ the HTTP methods per route. Each method has its own list of middleware configura
   }
 }</pre></div>
 
-<p>Note that the route config is using
-the express routing mechanism for parameters: <code>/my/route/:id</code>. This data can then be used in our service calls by
+<p>The route config is using the express routing mechanism for parameters: <code>/my/route/:id</code>. This data can then be used in our service calls by
 placing a corresponding URI token in the service definition: <code>http://myws.com/api/someresource/{id}</code> where <code>{id}</code>
-will map to <code>:id</code>. Query params, routes params, and the request body can all be used to pass data to the service call.</p>
+will map to <code>:id</code>. Query params, routes params, request body, and data returned from previous service calls can all be used to pass data to the service call.</p>
 
-<p>Service calls use <a href="https://github.com/mikeal">mikeal's</a> <a href="https://github.com/mikeal/request">request</a> module to handle HTTP, so any valid configuration for
+<p>Service calls use the <a href="https://github.com/mikeal/request">request</a> module to handle HTTP, so any valid configuration for
 <strong>request</strong> applies here.</p>
 
 <h2>
