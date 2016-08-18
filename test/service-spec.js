@@ -99,4 +99,30 @@ describe('service', function () {
       done();
     }).catch(done);
   });
+
+  it('should allow a service to use the response body from a previous call for session data', function () {
+    const services = {
+      test: {
+        GET: {
+          uri: 'http://example.com/api/test/{foo}'
+        }
+      }
+    };
+
+    const config = {
+      name: 'GET:test',
+      type: 'service'
+    };
+
+    const svc = service(config, services);
+    const req = {};
+    const res = {
+      locals: {
+        foo: 'bar'
+      }
+    };
+
+    svc(req, res);
+    expect(callServiceStub.getCall(0).args[0].uri).to.equal('http://example.com/api/test/bar');
+  });
 });
