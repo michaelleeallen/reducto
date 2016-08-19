@@ -34,9 +34,11 @@ describe('service-call', function () {
 
   it('will reject if response contains an error code', function (done) {
     const statusCode = 403;
-    requestStub.callsArgWith(1, null, {statusCode}, null);
+    const body = 'Forbidden';
+    const error = {statusCode, message: body};
+    requestStub.callsArgWith(1, null, {statusCode}, body);
     callService({uri: STUB_URL}).catch((e) => {
-      expect(e.statusCode).to.eq(statusCode);
+      expect(e).to.deep.equal(error);
       done();
     });
   });
