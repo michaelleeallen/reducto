@@ -5,28 +5,38 @@ const requestStub = sinon.stub();
 const callService = proxyquire('../lib/service-call', {
   'request': requestStub
 });
+const STUB_URL = 'http://example.com/api/test';
 
-describe('service-call', function(){
-  afterEach(function() {
+describe('service-call', function () {
+  afterEach(function () {
     requestStub.reset();
   });
-  
-  it('makes web service calls', function(done){
-    requestStub.callsArgWith(1, null, {}, {"foo": "bar"});
+
+  it('makes web service calls', function (done) {
+    requestStub.callsArgWith(1, null, {}, {'foo': 'bar'});
     callService({
-      uri: 'http://example.com/api/test'
+      uri: STUB_URL
     }).then((data) => {
       expect(data.foo).to.eq('bar');
       done();
     }).catch(done);
   });
-  
-  it('will bail if request error encountered', function(done) {
+
+  it('will reject if request error encountered', function (done) {
     requestStub.callsArgWith(1, {message: 'Oh no!'}, {}, null);
     callService({
-      uri: 'http://example.com/api/test'
+      uri: STUB_URL
     }).catch((e) => {
       expect(e.message).to.eq('Oh no!');
+      done();
+    });
+  });
+
+  it('will reject if response contains an error code', function (done) {
+    const statusCode = 403;
+    requestStub.callsArgWith(1, null, {statusCode}, null);
+    callService({uri: STUB_URL}).catch((e) => {
+      expect(e.statusCode).to.eq(statusCode);
       done();
     });
   });
