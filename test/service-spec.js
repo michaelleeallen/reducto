@@ -93,11 +93,14 @@ describe('service', function () {
 
   it('should map data from service response to a specified schema if provided', function (done) {
     const svc = service(fixture.CONFIG, fixture.SERVICES);
-    var svcCall = svc({params: {zip: '29681'}, body: {foo: 'bar'}}, {locals: {}});
-    svcCall.then((data) => {
-      expect(data.weather).to.deep.equal(fixture.RESPONSE.query.results.channel);
+    var res = { locals: {} };
+    var next = sinon.stub();
+    svc({params: {zip: '29681'}, body: {foo: 'bar'}}, res, next);
+    setTimeout(() => {
+      expect(res.locals.weather).to.deep.equal(fixture.RESPONSE.query.results.channel);
+      expect(next).to.have.been.called;
       done();
-    }).catch(done);
+    }, 200);
   });
 
   it('should allow a service to use the response body from a previous call for session data', function () {
