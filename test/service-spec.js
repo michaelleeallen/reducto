@@ -128,4 +128,16 @@ describe('service', function () {
     svc(req, res);
     expect(callServiceStub.getCall(0).args[0].uri).to.equal('http://example.com/api/test/bar');
   });
+
+  it('should catch upstream service errors and pass them back to the application', function (done) {
+    const svc = service(fixture.CONFIG, fixture.SERVICES);
+    var next = sinon.stub();
+    const error = new Error('broke');
+    callServiceStub.returns(new Promise((resolve, reject) => reject(error)));
+    svc({}, {}, next);
+    setTimeout(() => {
+      expect(next.calledWith(error)).to.be.true;
+      done();
+    }, 200);
+  });
 });
