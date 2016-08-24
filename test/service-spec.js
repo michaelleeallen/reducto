@@ -103,6 +103,22 @@ describe('service', function () {
     }, 200);
   });
 
+  it('should map all returned data to a "dataKey" if provided', function (done) {
+    const config = { type: 'service', name: 'GET:foo', dataKey: 'foo' };
+    const services = {
+      foo: { GET: { uri: '' } }
+    };
+    var res = { locals: {} };
+    const next = sinon.stub();
+    const svc = service(config, services);
+    svc({}, res, next);
+    setTimeout(() => {
+      expect(res.locals.foo).to.deep.equal(fixture.RESPONSE);
+      expect(next).to.have.been.called;
+      done();
+    }, 100);
+  });
+
   it('should allow a service to use the response body from a previous call for session data', function () {
     const services = {
       test: {
