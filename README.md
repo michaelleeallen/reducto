@@ -82,6 +82,14 @@ An optional context for value replacement.
 ##### services
 A list of service middleware configurations that will be called as an asynchronous batch.
 
+#### iterator
+
+##### key
+The data key to pull list from.
+
+##### service
+The configuration for the service to call.
+
 #### fixture
 
 ##### data
