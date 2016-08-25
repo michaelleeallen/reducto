@@ -68,10 +68,27 @@ The path to the middleware file(with optional function name as *file.js#myFuncNa
 ##### name
 The name of service endpoint from your services config file.
 
+##### dataKey
+An optional key where all returned data will be stored in the response.
+
+##### dataSchema
+An optional schema to map returned data to.
+
+##### context
+An optional context for value replacement.
+
 #### batch
 
 ##### services
 A list of service middleware configurations that will be called as an asynchronous batch.
+
+#### iterator
+
+##### key
+The data key to pull list from.
+
+##### service
+The configuration for the service to call.
 
 #### fixture
 

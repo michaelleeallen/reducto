@@ -6,17 +6,6 @@ const services = {
 
 describe('utils', function(){
   describe('#loadStack', function(){
-    it('should map batch service calls to a single middleware function', function(){
-      const stack = utils.loadStack([
-        { type: 'batch', services: [
-          { type: 'service', name: 'GET:weather'},
-          { type: 'service', name: 'GET:weather'}
-        ]}
-      ], services);
-
-      expect(stack).to.have.length(2); // expect length to be 2 because we add a response middleware to every route
-    });
-    
     it('should map middleware function from config objects', function() {
       const stack = utils.loadStack([
         {type: 'middleware', path: 'test/fixtures/middleware.js#headerTest'},
