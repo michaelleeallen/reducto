@@ -78,7 +78,32 @@ describe('service', function () {
     };
 
     svc(req, {});
-    expect(callServiceStub.getCall(0).args[0].json).to.deep.equal(req.body);
+    expect(callServiceStub.getCall(0).args[0].body).to.deep.equal(req.body);
+  });
+
+  it('should map "bodySchema" if provided', function () {
+    const testServices = {
+      weather: {
+        GET: {
+          uri: 'http://example.com/api/weather/{zip}?days={days}&format={format}',
+          bodySchema: {
+            foo: 'bar.foo'
+          }
+        }
+      }
+    };
+
+    const req = {
+      params: {
+        bar: {
+          foo: 'baz'
+        }
+      }
+    };
+
+    const svc = service(fixture.CONFIG, testServices);
+    svc(req, {});
+    expect(callServiceStub.getCall(0).args[0].json).to.deep.equal({foo: 'baz'});
   });
 
   it('should map session values to service URI tokens', function () {
