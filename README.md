@@ -131,6 +131,19 @@ will map to `:id`. Query params, routes params, request body, and data returned 
 Service calls use the [request](https://github.com/mikeal/request) module to handle HTTP, so any valid configuration for
 **request** applies here.
 
+#### Additional Service configuration
+
+##### bodySchema
+An optional JSON schema that describes the request body to send to the service call. Paths are specified according to [pathval](https://github.com/chaijs/pathval).
+```json
+{
+  "bodySchema": {
+    "foo": "data.content.foo",
+    "bar": "data.content.bars[0]"
+  }
+}
+```
+
 ## Examples
 
 Navigate to the root directory and run `npm start`. This will start the example app at
