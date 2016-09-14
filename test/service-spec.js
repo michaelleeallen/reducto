@@ -170,6 +170,44 @@ describe('service', function () {
     expect(callServiceStub.getCall(0).args[0].uri).to.equal('http://example.com/api/test/bar');
   });
 
+  it('should merge data from service response', function (done) {
+    const req = {};
+    var res = {
+      locals: {
+        foo: {
+          bar: 'baz',
+          beep: 'boop'
+        }
+      }
+    };
+
+    const servicesConfig = {
+      test: {
+        GET: {
+          uri: 'http://example.com/api/test'
+        }
+      }
+    };
+
+    const config = {
+      name: 'GET:test',
+      type: 'service'
+    };
+
+    const svc = service(config, servicesConfig);
+    callServiceStub.returns(new Promise(resolve => resolve({foo: {beep: 'bop', one: 'two'}})));
+    svc(req, res);
+
+    setTimeout(() => {
+      expect(res.locals.foo).to.deep.equal({
+        bar: 'baz',
+        beep: 'bop',
+        one: 'two'
+      });
+      done();
+    }, 100);
+  });
+
   it('should catch upstream service errors and pass them back to the application', function (done) {
     const svc = service(fixture.CONFIG, fixture.SERVICES);
     var next = sinon.stub();
