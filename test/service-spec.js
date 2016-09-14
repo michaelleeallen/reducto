@@ -217,6 +217,19 @@ describe('service', function () {
     setTimeout(() => {
       expect(next.calledWith(error)).to.be.true;
       done();
-    }, 200);
+    }, 100);
+  });
+
+  it('should send service info along with error', (done) => {
+    const svc = service(fixture.CONFIG, fixture.SERVICES);
+    var next = sinon.stub();
+    const error = new Error('broke');
+    callServiceStub.returns(new Promise((resolve, reject) => reject(error)));
+    svc({}, {}, next);
+    setTimeout(() => {
+      expect(error).to.have.property('serviceInfo');
+      expect(error.serviceInfo.name).to.equal(fixture.CONFIG.name);
+      done();
+    }, 100);
   });
 });
