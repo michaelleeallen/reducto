@@ -21,12 +21,26 @@ describe('map-schema', () => {
   });
 
   it('should map arrays as schemas', function () {
-    const schema = ['foos'];
+    const schema = [{ path: 'foos' }];
     const data = {
       foos: ['a', 'b', 'c']
     };
 
     expect(mapObject(schema, data)).to.deep.equal(data.foos);
+  });
+
+  it('should map arrays as schemas with optional value schema', () => {
+    const schema = [
+      { path: 'foos', type: 'list', schema: { foo: 'FOOBAR' } }
+    ];
+
+    const data = {
+      foos: [{FOOBAR: 'a'}, {FOOBAR: 'b'}]
+    };
+
+    const expected = [{foo: 'a'}, {foo: 'b'}];
+
+    expect(mapObject(schema, data)).to.deep.equal(expected);
   });
 
   it('should map 1:n values', () => {
