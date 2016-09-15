@@ -87,6 +87,17 @@ A list of service middleware configurations that will be called as an asynchrono
 ##### key
 The data key to pull list from.
 
+#### filter
+
+##### dataPath
+The object path to search for list to filter.
+
+##### key
+The key to filter on.
+
+##### value
+The value to filter by.
+
 ##### service
 The configuration for the service to call.
 
