@@ -87,6 +87,9 @@ A list of service middleware configurations that will be called as an asynchrono
 ##### key
 The data key to pull list from.
 
+##### service
+The configuration for the service to call.
+
 #### filter
 
 ##### dataPath
@@ -98,8 +101,13 @@ The key to filter on.
 ##### value
 The value to filter by.
 
-##### service
-The configuration for the service to call.
+#### map
+
+##### schema
+Any valid configuration for `service.dataSchema`
+
+##### dataKey
+An optional key to store the mapped data in `res.locals`
 
 #### fixture
 
