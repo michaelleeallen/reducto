@@ -78,7 +78,32 @@ describe('service', function () {
     };
 
     svc(req, {});
-    expect(callServiceStub.getCall(0).args[0].json).to.deep.equal(req.body);
+    expect(callServiceStub.getCall(0).args[0].body).to.deep.equal(req.body);
+  });
+
+  it('should map "bodySchema" if provided', function () {
+    const testServices = {
+      weather: {
+        GET: {
+          uri: 'http://example.com/api/weather/{zip}?days={days}&format={format}',
+          bodySchema: {
+            foo: 'bar.foo'
+          }
+        }
+      }
+    };
+
+    const req = {
+      params: {
+        bar: {
+          foo: 'baz'
+        }
+      }
+    };
+
+    const svc = service(fixture.CONFIG, testServices);
+    svc(req, {});
+    expect(callServiceStub.getCall(0).args[0].json).to.deep.equal({foo: 'baz'});
   });
 
   it('should map session values to service URI tokens', function () {
@@ -145,6 +170,44 @@ describe('service', function () {
     expect(callServiceStub.getCall(0).args[0].uri).to.equal('http://example.com/api/test/bar');
   });
 
+  it('should merge data from service response', function (done) {
+    const req = {};
+    var res = {
+      locals: {
+        foo: {
+          bar: 'baz',
+          beep: 'boop'
+        }
+      }
+    };
+
+    const servicesConfig = {
+      test: {
+        GET: {
+          uri: 'http://example.com/api/test'
+        }
+      }
+    };
+
+    const config = {
+      name: 'GET:test',
+      type: 'service'
+    };
+
+    const svc = service(config, servicesConfig);
+    callServiceStub.returns(new Promise(resolve => resolve({foo: {beep: 'bop', one: 'two'}})));
+    svc(req, res);
+
+    setTimeout(() => {
+      expect(res.locals.foo).to.deep.equal({
+        bar: 'baz',
+        beep: 'bop',
+        one: 'two'
+      });
+      done();
+    }, 100);
+  });
+
   it('should catch upstream service errors and pass them back to the application', function (done) {
     const svc = service(fixture.CONFIG, fixture.SERVICES);
     var next = sinon.stub();
@@ -154,6 +217,19 @@ describe('service', function () {
     setTimeout(() => {
       expect(next.calledWith(error)).to.be.true;
       done();
-    }, 200);
+    }, 100);
+  });
+
+  it('should send service info along with error', (done) => {
+    const svc = service(fixture.CONFIG, fixture.SERVICES);
+    var next = sinon.stub();
+    const error = new Error('broke');
+    callServiceStub.returns(new Promise((resolve, reject) => reject(error)));
+    svc({}, {}, next);
+    setTimeout(() => {
+      expect(error).to.have.property('serviceInfo');
+      expect(error.serviceInfo.name).to.equal(fixture.CONFIG.name);
+      done();
+    }, 100);
   });
 });
