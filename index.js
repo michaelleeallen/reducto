@@ -1,6 +1,5 @@
 'use-strict';
-var _ = require('lodash');
-var utils = require('./lib/utils');
+const utils = require('./lib/utils');
 
 /**
  * Read in route and service definitions from JSON and configure
@@ -11,9 +10,9 @@ var utils = require('./lib/utils');
  * @param {object} services - a services config
  */
 module.exports = function reducto(app, routes, services) {
-  _.each(routes, (methods, route) => {
-    _.each(methods, (config, method) => {
+  for (let route of routes) {
+    for (let method of route) {
       app[method.toLowerCase()](route, utils.loadStack(config, services));
-    });
-  });
+    }
+  }
 };
